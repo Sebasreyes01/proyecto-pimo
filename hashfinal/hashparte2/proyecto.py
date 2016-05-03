@@ -2,6 +2,49 @@
 '''Programadores: Juan Camilo Mantilla Rubio - Sebastian Camilo Reyes Villamil'''
 from sys import stdin
 
+class ArrayQueue:
+    CAPACITY = 10
+    def __init__(self):
+        self._data = [None] * ArrayQueue.CAPACITY
+        self._size = 0
+        self._front = 0
+
+    def __len__(self):
+        return self._size
+
+    def is_empty(self):
+        return self._size == 0
+
+    def first(self):
+        if self.is_empty():
+            raise Empty('La Cola esta vacia')
+        return self._data[self._front]
+
+    def dequeue(self):
+        if self.is_empty():
+            raise Empty('La Cola esta vacia')
+        ans = self._data[self._front]
+        self._data[self._front] = None
+        self._front = (self._front + 1) % len(self._data)
+        self._size -= 1
+        return ans
+
+    def enqueue(self,e):
+        if self._size == len(self._data):
+            self._resize(2* len(self._data))
+        avail = (self._front + self._size) % len(self._data)
+        self._data[avail] = e
+        self._size +=1
+
+    def _resize(self, cap):
+        old = self._data
+        self._data = [None] * cap
+        walk = self._front
+        for k in range(self._size):
+            self._data[k] = old[walk]
+            walk = (1+walk) % len(old)
+        self._front = 0
+
 class Node:
     """Nodo basico para construir las listas Lsec"""
     def __init__(self,val,next):
@@ -136,6 +179,19 @@ def compress(x, a, b, p, N):
 ##        abtup=calcab2(abval,abtup)
 ##    print(maxi,mini)
 
+def tablahash(pobla):
+    a = [None for x in range(37)]
+    for i in range (len(pobla)):
+        if a[pobla[i][2]] == None:
+            b = ArrayQueue()
+            b.enqueue(pobla[i])
+            a[pobla[i][2]] = b
+        else:
+            b = a[pobla[i][2]]
+            b.enqueue(pobla[i])
+            a[pobla[i][2]] = b
+    return a
+
 def main():
     datos = []
     a = stdin.readline().strip().split(": ")
@@ -154,47 +210,24 @@ def main():
         x = hashcode(b[0], b[1])
         c = compress(x, 67, 59, 73, 37)
         lista.append(c)
+        try:
+            ciu = datos[i][1]
+            ciu = ciu.split()
+            for j in range(len(ciu)):
+                c1=ciu[j].replace('-',' ')
+                c1=c1.replace('(',' ')
+                c1=c1.replace(')',' ')
+                c2=c1.split()
+                ciu[j] = (c2[0], c2[1])
+            lista.append(ciu)
+        except:
+            pass
         pobla.append(lista)
-    for i in pobla:
-        print(i)
+    tabla = tablahash(pobla)
+    print(len(tabla))
+    print(tabla)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    #for i in range(len(pobla)):
-        #a = pobla[i][0]
-        ##print("a", a)
-        #b = a.split(',')
-        ##print("b", b)
-        #c = (b[1], b[2])
-        ##print("c", c)
-        #d = hashcode(b[1], b[2])
-        ##print("d", d)
-        #e = compress(d, 67, 59, 73, 37)
-        ##print("e", e)
-        #pobla[i][0] = [c, e]
-        ##print("pobla1", pobla)
-        #try:
-            #a = pobla[i][1]
-            ##print("a", a)
-            #b = a.split()
-            ##print("b", b)
-            #pobla[i][1] = b
-            ##print("pobla", pobla)
-        #except:
-            #pass
-    #for i in range(len(pobla)):
-        #print(pobla[i])
 
 main()
