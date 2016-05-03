@@ -2,6 +2,35 @@
 '''Programadores: Juan Camilo Mantilla Rubio - Sebastian Camilo Reyes Villamil'''
 from sys import stdin
 
+class Node:
+    """Nodo basico para construir las listas Lsec"""
+    def __init__(self,val,next):
+        self.value=val
+        self.next=next
+
+def makeEmpty():
+    """Construye una Lsec vacia"""
+    return Node(None,None)
+
+def is_empty(list):
+    """Decide si una Lsec es vacia"""
+    return list.value is None and list.next is None
+
+def printLsec(list):
+    """Pre: list es una Lsec.
+    Post: imprime el contenido de list, excluyendo el centinela,
+    con las mismas convenciones de la ultima tarea."""
+    if is_empty(list):
+        print('NIL')
+    else:
+        list = list.next
+        print('(',end='')
+        print(list.value, end='')
+        while list.next!=None:
+            list=list.next
+            print(' ',list.value,sep='',end='')
+        print(')')
+
 def hashcode(lon, lat):
     """Pre: lon es la longitud de la ciudad y lat la latitud
     post:retorna el hashcode de esa ciudad
@@ -108,36 +137,64 @@ def compress(x, a, b, p, N):
 ##    print(maxi,mini)
 
 def main():
-    pobla = []
+    datos = []
     a = stdin.readline().strip().split(": ")
     while a != ['']:
-        pobla.append(a)
+        datos.append(a)
         a = stdin.readline().strip().split(": ")
-    for i in range(len(pobla)):
-        print(pobla[i])
-    for i in range(len(pobla)):
-        a = pobla[i][0]
-        #print("a", a)
-        b = a.split(',')
-        #print("b", b)
-        c = (b[1], b[2])
-        #print("c", c)
-        d = hashcode(b[1], b[2])
-        #print("d", d)
-        e = compress(d, 67, 59, 73, 37)
-        #print("e", e)
-        pobla[i][0] = [c, e]
-        #print("pobla1", pobla)
-        try:
-            a = pobla[i][1]
-            #print("a", a)
-            b = a.split()
-            #print("b", b)
-            pobla[i][1] = b
-            #print("pobla", pobla)
-        except:
-            pass
-    for i in range(len(pobla)):
-        print(pobla[i])
+    for i in range(len(datos)):
+        print(datos[i])
+    pobla = []
+    for i in range(len(datos)):
+        lista = []
+        lista.append(datos[i][0])
+        a = lista[0].split(",")
+        b = (a[1], a[2])
+        lista.append(b)
+        x = hashcode(b[0], b[1])
+        c = compress(x, 67, 59, 73, 37)
+        lista.append(c)
+        pobla.append(lista)
+    for i in pobla:
+        print(i)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #for i in range(len(pobla)):
+        #a = pobla[i][0]
+        ##print("a", a)
+        #b = a.split(',')
+        ##print("b", b)
+        #c = (b[1], b[2])
+        ##print("c", c)
+        #d = hashcode(b[1], b[2])
+        ##print("d", d)
+        #e = compress(d, 67, 59, 73, 37)
+        ##print("e", e)
+        #pobla[i][0] = [c, e]
+        ##print("pobla1", pobla)
+        #try:
+            #a = pobla[i][1]
+            ##print("a", a)
+            #b = a.split()
+            ##print("b", b)
+            #pobla[i][1] = b
+            ##print("pobla", pobla)
+        #except:
+            #pass
+    #for i in range(len(pobla)):
+        #print(pobla[i])
 
 main()
