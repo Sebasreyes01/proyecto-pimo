@@ -1,4 +1,3 @@
-#TODOKETE
 '''Programadores: Juan Camilo Mantilla Rubio - Sebastian Camilo Reyes Villamil'''
 from sys import stdin
 
@@ -225,7 +224,9 @@ def main():
         pobla.append(lista)
     tabla = tablahash(pobla)
     print(len(tabla))
-    print(tabla)
+    for i in range(len(tabla)):
+        if tabla[i] is not None:
+            print(tabla[i]._data)
 
 
 
