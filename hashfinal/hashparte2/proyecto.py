@@ -2,7 +2,7 @@
 from sys import stdin
 
 class ArrayQueue:
-    CAPACITY = 10
+    CAPACITY = 1
     def __init__(self):
         self._data = [None] * ArrayQueue.CAPACITY
         self._size = 0
@@ -182,13 +182,20 @@ def tablahash(pobla):
     a = [None for x in range(37)]
     for i in range (len(pobla)):
         if a[pobla[i][2]] == None:
-            b = ArrayQueue()
-            b.enqueue(pobla[i])
+            b = Node(pobla[i],None)
             a[pobla[i][2]] = b
+            #b = ArrayQueue()
+            #b.enqueue(pobla[i])
+            #b._resize(len(b))
+            #a[pobla[i][2]] = b
         else:
-            b = a[pobla[i][2]]
-            b.enqueue(pobla[i])
+            b = Node(a[pobla[i][2]],a[pobla[i][2]])
             a[pobla[i][2]] = b
+            #b = a[pobla[i][2]]
+            #b.enqueue(pobla[i])
+            #b._resize(len(b))
+            #a[pobla[i][2]] = b
+
     return a
 
 def main():
@@ -197,8 +204,8 @@ def main():
     while a != ['']:
         datos.append(a)
         a = stdin.readline().strip().split(": ")
-    for i in range(len(datos)):
-        print(datos[i])
+    #for i in range(len(datos)):
+        #print(datos[i])
     pobla = []
     for i in range(len(datos)):
         lista = []
@@ -213,10 +220,10 @@ def main():
             ciu = datos[i][1]
             ciu = ciu.split()
             for j in range(len(ciu)):
-                c1=ciu[j].replace('-',' ')
-                c1=c1.replace('(',' ')
-                c1=c1.replace(')',' ')
-                c2=c1.split()
+                c1 = ciu[j].replace('-', ' ')
+                c1 = c1.replace('(', ' ')
+                c1 = c1.replace(')', ' ')
+                c2 = c1.split()
                 ciu[j] = (c2[0], c2[1])
             lista.append(ciu)
         except:
@@ -226,7 +233,12 @@ def main():
     print(len(tabla))
     for i in range(len(tabla)):
         if tabla[i] is not None:
-            print(tabla[i]._data)
+            if tabla[i][2].next is not None:
+                printLsec(tabla[i].value)
+            else:
+                print(tabla[i].value)
+        else:
+            print(None)
 
 
 
