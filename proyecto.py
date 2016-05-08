@@ -202,6 +202,8 @@ def main():
     datos = []
     a = stdin.readline().strip().split(": ")
     while a != ['']:
+        if(len(a))==1:
+            a.append(None)
         datos.append(a)
         a = stdin.readline().strip().split(": ")
     #for i in range(len(datos)):
@@ -216,7 +218,7 @@ def main():
         x = hashcode(b[0], b[1])
         c = compress(x, 67, 59, 73, 37)
         lista.append(c)
-        try:
+        if datos[i][1]!=None:
             ciu = datos[i][1]
             ciu = ciu.split()
             for j in range(len(ciu)):
@@ -226,11 +228,32 @@ def main():
                 c2 = c1.split()
                 ciu[j] = (c2[0], c2[1])
             lista.append(ciu)
-        except:
-            pass
+        else:
+            lista.append(None)
         pobla.append(lista)
-    for i in range(len(pobla)):
-        print(pobla[i])
+
+    copia=pobla.copy()
+    for i in range(len(copia)):
+        if copia[i][3]!=None:
+            for j in range(len(copia[i][3])):
+                a=copia[i][3][j]
+                b=copia[i][1]
+                for k in range(len(copia)):
+                    if copia[k][1]==a:
+                        c=copia[k][3]
+                        if c==None:
+                            c=[b]
+                        else:
+                            c.append(b)
+                        pobla[k][3]=c
+#    for i in range(len(pobla)):
+#        print(pobla[i])
+
+
+
+
+
+    
     tabla = tablahash(pobla)
     print(len(tabla))
 ##    for i in range(len(tabla)):
