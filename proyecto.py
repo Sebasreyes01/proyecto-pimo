@@ -248,7 +248,20 @@ def main():
                         pobla[k][3]=c
 #    for i in range(len(pobla)):
 #        print(pobla[i])
+#---------------------------------------------------------------------
+    tabladehash=[]
+    for i in range(len(pobla)):
+        nodo=None
+        if pobla[i][3]!=None:
+            for j in range(len(pobla[i][3])):
+                nodo=Node(pobla[i][3][j],nodo)
+        nodo=Node(pobla[i][1],nodo)
+        tabladehash.append(nodo)
+    
 
+
+
+#------------------------------
 
 
 
