@@ -1,6 +1,6 @@
 '''Programadores: Juan Camilo Mantilla Rubio - Sebastian Camilo Reyes Villamil'''
 from sys import stdin
-
+tabla = []
 class ArrayQueue:
     CAPACITY = 1
     def __init__(self):
@@ -45,33 +45,46 @@ class ArrayQueue:
         self._front = 0
 
 class Node:
-    """Nodo basico para construir las listas Lsec"""
     def __init__(self,val,next):
         self.value=val
         self.next=next
+        
+    def __len__(list):
+        cont = 0
+        while list is not None:
+            cont += 1
+            list = list.next
+        return cont
 
-def makeEmpty():
-    """Construye una Lsec vacia"""
-    return Node(None,None)
+def esta (a,b):
+    """pre: a es un valor a buscar y b es un arreglo de listas encadenadas
+    post: retorna la siguiente posicion si la encuentra y si no retorna una lista vacia
+    """
+    r = []
+    for i in b:
+        if a == i.value:
+            i = i.next
+            while i != None:
+                r.append(i.value)
+                i = i.next
+            return r
+    return []
 
-def is_empty(list):
-    """Decide si una Lsec es vacia"""
-    return list.value is None and list.next is None
-
-def printLsec(list):
-    """Pre: list es una Lsec.
-    Post: imprime el contenido de list, excluyendo el centinela,
-    con las mismas convenciones de la ultima tarea."""
-    if is_empty(list):
-        print('NIL')
+def printList(lista):
+    """pre: lista es una lista encadenada
+    post: imprime la lista encadenada
+    """
+    line='('
+    if lista != None:
+        line=line+str(lista.value)
+        lista=lista.next
+        while lista != None:
+            line=line+' '+str(lista.value)
+            lista=lista.next
+        line=line+')'
+        print(line)
     else:
-        list = list.next
-        print('(',end='')
-        print(list.value, end='')
-        while list.next!=None:
-            list=list.next
-            print(' ',list.value,sep='',end='')
-        print(')')
+        print ('NIL')
 
 def hashcode(lon, lat):
     """Pre: lon es la longitud de la ciudad y lat la latitud
@@ -93,121 +106,89 @@ def compress(x, a, b, p, N):
     Post: Retorna el valor comprimido de los valores'''
     return ((a * x + b) % p) % N
 
-##def hashmake(pobla):
-##    res=[]
-##    for i in range(len(pobla)):
-##        a=hashcode(pobla[i][1],pobla[i][2])
-##        res.append(a)
-##    return res
+def verifciudad(coord1):
+    """pre: coord1 es la coordenada de la primera ciudad
+    post: verifica si la ciudad en coord1 existe en el grafo
+    """
+    global tabla
+    x = hashcode(coord1[0],coord1[1])
+    c = compress(x, 67, 59, 73, 37)
+    if tabla[c] is None:
+        return False
+    else:
+        while tabla[c] != None:
+            if tabla[c].value[1] == coord1:
+                return True
+            tabla[c] = tabla[c].next
+        return False
 
+def path(graph, start, end):
+    """pre: graph es el grafo que se va a usar, start es la coordenada de inicio y end es la
+                coordenada final
+    post: retorna el nombre de las ciudades que conforman el camino mas corto o retorna no hay
+    camino si no hay un camino entre las 2 ciudades o retorna no hay ciudad en coord1 si las
+    coordenadas en start no existen
+    """
+    if verifciudad(start):
+        queue = ArrayQueue()
+        queue.enqueue([start])
+        while queue:
+            path = queue.dequeue()
+            node = path[-1]
+            if node == end:
+                re = nombres(path)
+                res = ", ".join(re)
+                return res
+            if len(path) > len(graph):
+                return "No hay camino"
+            for adjacent in esta(node,graph):
+                new_path = list(path)
+                new_path.append(adjacent)
+                queue.enqueue(new_path)
+    else:
+        return "No hay ciudad en coord1"
 
-##def criba_eratostenes(n):
-##    '''Pre: n es un entero
-##    Post: retorna una lista con los numeros primos hasta n
-##    Algoritmo tomado de wikibooks.org'''
-##    l=[]
-##    multiplos = set()
-##    for i in range(2, n+1):
-##        if i not in multiplos:
-##            l.append(i)
-##            multiplos.update(range(i*i, n+1, i))
-##    return l
-
-
-##def calcab(lista):
-##    '''Pre: lista es una lista con los posibles valores de a y b
-##    Post: retorna una lista con tuplas de cada combinacion a,b'''
-##    res=[]
-##    for i in range(len(lista)):
-##        for j in range(len(lista)):
-##            if lista[i]!=lista[j]:
-##                a=(lista[i],lista[j])
-##                if a not in res:
-##                    res.append(a)
-##    return res
-##
-##def calcab2(listaval,listatup):
-##    '''Pre: lista es una lista con los posibles valores de a y b,
-##    listatup es una lista con las tuplas posibles hasta el momento.
-##    Post: retorna una lista con tuplas nuevas de cada combinacion a,b'''
-##    for i in range(len(listaval)-1):
-##        a=(listaval[i],listaval[-1])
-##        b=(listaval[-1],listaval[i])
-##        listatup.append(a)
-##        listatup.append(b)
-##    return listatup
-
-
-##def compute(datos,N):
-##    '''Pre: datos es la lista de hashcodes de las poblaciones, N es un entero
-##    Calcula e imprime las tuplas para las cuales se dan las maximas y minimas
-##    coliciones de compress'''
-##    primos=criba_eratostenes(2*N)
-##    cont=0
-##    while primos[cont]<=N:
-##        cont+=1
-##    pval=primos[cont:]
-##    abval=primos[0:cont]
-##    maxi=0
-##    mini=0
-##    abtup=calcab(abval)
-##    for i in range(len(pval)):
-##        for j in range(len(abtup)):
-##            coli=0
-##            colist=[]
-##            for k in range(len(datos)):
-##                codigo=compress(datos[k],abtup[j][0],abtup[j][1],pval[i],N)
-##                if codigo not in colist:
-##                    colist.append(codigo)
-##                else:
-##                    coli+=1
-##            if mini==0 and maxi==0:
-##                mini,maxi=(N,abtup[j][0],abtup[j][1],pval[i],coli),(N,abtup[j][0],abtup[j][1],pval[i],coli)
-##            else:
-##                if coli < mini[4]:
-##                    mini=(N,abtup[j][0],abtup[j][1],pval[i],coli)
-##                elif coli == mini[4]:
-##                    if (abtup[j][0] > mini[1]) or (abtup[j][0]==mini[1] and abtup[j][1] > mini[2]) or (abtup[j][0]==mini[1] and abtup[j][1]==mini[2] and pval[i]>mini[3]):
-##                        mini=(N,abtup[j][0],abtup[j][1],pval[i],coli)
-##                if coli > maxi[4]:
-##                    maxi=(N,abtup[j][0],abtup[j][1],pval[i],coli)
-##                elif coli == maxi[4]:
-##                    if (abtup[j][0] > maxi[1]) or (abtup[j][0]==maxi[1] and abtup[j][1] > maxi[2]) or (abtup[j][0]==maxi[1] and abtup[j][1]==maxi[2] and pval[i]>maxi[3]):
-##                        maxi=(N,abtup[j][0],abtup[j][1],pval[i],coli)
-##        abval.append(pval[i])
-##        abtup=calcab2(abval,abtup)
-##    print(maxi,mini)
+def nombres(path):
+    """pre: path es el camino entre 2 ciudades
+    post: retorna el nombre de las ciudades que conforman a path
+    """
+    global tabla
+    res = []
+    for i in path:
+        x = hashcode(i[0],i[1])
+        c = compress(x, 67, 59, 73, 37)
+        a = tabla[c]
+        while a !=  None:
+            if a.value[1] == i:
+                z = a.value[0]
+                z = z.split(",")
+                res.append(z[0])
+            a = a.next
+    return res
 
 def tablahash(pobla):
+    """pre: pobla es una lista con la informacion de cada ciudad
+    post: retorna la tabla de hash con las colisiones puestas como listas encadenadas
+    """
     a = [None for x in range(37)]
     for i in range (len(pobla)):
         if a[pobla[i][2]] == None:
             b = Node(pobla[i],None)
             a[pobla[i][2]] = b
-            #b = ArrayQueue()
-            #b.enqueue(pobla[i])
-            #b._resize(len(b))
-            #a[pobla[i][2]] = b
         else:
             b = Node(pobla[i],a[pobla[i][2]])
             a[pobla[i][2]] = b
-            #b = a[pobla[i][2]]
-            #b.enqueue(pobla[i])
-            #b._resize(len(b))
-            #a[pobla[i][2]] = b
-
     return a
 
 def main():
-    datos = []
+    global tabla
+    datos = []    
     a = stdin.readline().strip().split(": ")
     while a != ['']:
         if(len(a))==1:
             a.append(None)
         datos.append(a)
         a = stdin.readline().strip().split(": ")
-    #for i in range(len(datos)):
-        #print(datos[i])
     pobla = []
     for i in range(len(datos)):
         lista = []
@@ -231,7 +212,6 @@ def main():
         else:
             lista.append(None)
         pobla.append(lista)
-
     copia=pobla.copy()
     for i in range(len(copia)):
         if copia[i][3]!=None:
@@ -246,9 +226,7 @@ def main():
                         else:
                             c.append(b)
                         pobla[k][3]=c
-#    for i in range(len(pobla)):
-#        print(pobla[i])
-#---------------------------------------------------------------------
+    tabla = tablahash(pobla)
     tabladehash=[]
     for i in range(len(pobla)):
         nodo=None
@@ -257,28 +235,10 @@ def main():
                 nodo=Node(pobla[i][3][j],nodo)
         nodo=Node(pobla[i][1],nodo)
         tabladehash.append(nodo)
-    
-
-
-
-#------------------------------
-
-
-
-
-    
-    tabla = tablahash(pobla)
-    print(len(tabla))
-##    for i in range(len(tabla)):
-##        if tabla[i] is not None:
-##            if tabla[i][2].next is not None:
-##                printLsec(tabla[i].value)
-##            else:
-##                print(tabla[i].value)
-##        else:
-##            print(None)
-
-
-
+    r = path(tabladehash,('35|55/44@N', '14|24/08@E'),('35|53/45@N', '14|28/02@E'))
+    if r is None:
+        print("No hay camino")
+    else:
+        print(r)
 
 main()
